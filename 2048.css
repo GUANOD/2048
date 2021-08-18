@@ -1,0 +1,91 @@
+html,body{
+  margin:0;
+  padding:0;
+}
+
+body{
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+}
+.gridContainer{
+  display: grid;
+  position: relative;
+  grid-template-columns: repeat(4, 1fr);
+  width: 600px;
+  height: 600px;
+}
+
+.tileContainer{
+  content: "";
+  width: 600px;
+  height:600px;
+  background-color: transparent;
+  position: absolute;
+  top:0;
+  left:0;
+  z-index: 10;
+}
+
+.tileContainer *{
+  position: absolute;
+  width:25%;
+  height:25%;
+  background-color: thistle;
+  display: grid;
+  place-items: center;
+  font-size: 50px;
+  transition-duration: 0.75s;
+}
+
+.top1{
+  top:25%
+}
+.top0{
+  top:0%
+}
+.top2{
+  top:50%
+}
+.top3{
+  top:75%
+}
+
+.left0{
+  left: 0;
+}
+.left1{
+  left: 25%;
+}
+.left2{
+  left: 50%;
+}
+.left3{
+  left: 75%;
+}
+
+.c4{
+background-color: aqua;
+}
+
+.c8{
+  background-color: rgb(220, 246, 238);
+}
+.c16{
+  background-color: rgb(150, 226, 201);
+}
+.c32{
+  background-color: rgb(73, 155, 127);
+}
+.c64{
+  background-color: rgb(56, 126, 102);
+}
+.c128{
+  background-color: rgb(10, 100, 70);
+}
+.c256{
+  background-color: rgb(11, 61, 44);
+}
+.c512{
+  background-color: rgb(1, 22, 15);
+}
