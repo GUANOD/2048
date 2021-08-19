@@ -1,7 +1,6 @@
 const tileContainer = document.querySelector(".tileContainer");
 const gridContainer = document.querySelector(".gridContainer");
-
-
+const scoreDiv = document.querySelector(".score");
 
 //define grid
 const grid = [
@@ -11,16 +10,35 @@ const grid = [
   [0,0,0,0]
 ];
 
-console.table(grid);
-// console.log(grid[0][2]);
-// console.log(grid[2][1]);
+//marked array
+let marked =[];
 
+//score
+let score = 0;
+scoreDiv.innerText = score;
+
+//number of cells
+
+let cells = 0;
 
 //spawn 2 tiles
 createTile();
 createTile();
 
 const button = document.querySelector('button');
+
+//animation event 
+
+let animating = false;
+
+// cells.addEventListener('animationstart',()=>{
+//   animating = true;
+// });
+
+// cells.addEventListener('animationend',()=>{
+//   animating = false;
+// })
+
 
 document.addEventListener('keyup',(e)=>{
   switch(e.key){
@@ -45,6 +63,8 @@ document.addEventListener('keyup',(e)=>{
 
 function moveLeft(){
 
+  if (animating === true) return;
+
   let moveC;
 
   for(let i=0; i <= 3 ; i++){ // from top to bottom
@@ -63,9 +83,16 @@ function moveLeft(){
           tile.classList.remove(`left${j}`);
           grid[i][j]=0;
 
-          if(grid[i][j-g] === grid[i][j-g-1]){
+          if(grid[i][j-g] === grid[i][j-g-1] && !marked.includes(`${i},${j-g}`)&& !marked.includes(`${i},${j-g-1}`)){ // if cells are equal and both cells havent been merged
 
-            grid[i][j-g-1] = grid[i][j-g] * 2;
+            grid[i][j-g-1] = grid[i][j-g] * 2;  
+            marked.push(`${i},${j-g-1}`); // mark the remaining cell
+            console.log(marked);
+
+            //update score
+            score+=grid[i][j-g-1];
+            scoreDiv.innerText = score;
+
             let color = document.querySelector(`.top${i}.left${j-g-1}`);
             color.innerText = grid[i][j-g-1];
             color.classList.add(`c${grid[i][j-g-1]}`);
@@ -75,14 +102,21 @@ function moveLeft(){
           }
 
           moveC=1;
-          
-
         }
 
       }
 
-      if(grid[i][j] !== 0 && grid[i][j] === grid[i][j-1]){
+      if(grid[i][j] !== 0 && grid[i][j] === grid[i][j-1] && !marked.includes(`${i},${j-1}`) && !marked.includes(`${i},${j}`)){
+
         grid[i][j-1] = grid[i][j] * 2;
+        marked.push(`${i},${j-1}`);
+        console.log(marked);
+
+        //update score
+        score+=grid[i][j-1];
+        scoreDiv.innerText = score;
+
+
         let color = document.querySelector(`.top${i}.left${j-1}`);
             color.innerText = grid[i][j-1];
             color.classList.add(`c${grid[i][j-1]}`);
@@ -96,11 +130,14 @@ function moveLeft(){
   }
 
   moveC ===1? createTile() :"";
+  marked = [];
 }
 
 //swipe right
 
 function moveRight(){
+
+  if (animating === true) return;
 
   let moveC;
 
@@ -110,19 +147,27 @@ function moveRight(){
       //iterate through 3 next cells
       for(let g = 3 ; g > 0 ; g--){
         
-        if (grid[i] && grid[i][j]!== 0 && grid[i][j+g] === 0){
+        if (grid[i] && grid[i][j]!== 0 && grid[i][j+g] === 0 ){
 
           // move cells
           grid[i][j+g] = grid[i][j];
+
 
           let tile = document.querySelector(`.top${i}.left${j}`);
           tile.classList.add(`left${j+g}`);
           tile.classList.remove(`left${j}`);
           grid[i][j]=0;
 
-          if(grid[i][j+g] === grid[i][j+g+1]){
+          if(grid[i][j+g] === grid[i][j+g+1] && !marked.includes(`${i},${j+g}`) && !marked.includes(`${i},${j+g+1}`)){
 
             grid[i][j+g+1] = grid[i][j+g] * 2;
+            marked.push(`${i},${j+g+1}`);
+            console.log(marked);
+
+            //update score
+            score+=grid[i][j+g+1];
+            scoreDiv.innerText = score;
+
             let color = document.querySelector(`.top${i}.left${j+g+1}`);
             color.innerText = grid[i][j+g+1];
             color.classList.add(`c${grid[i][j+g+1]}`);
@@ -132,14 +177,19 @@ function moveRight(){
           }
 
           moveC=1;
-          
-
         }
-
       }
 
-      if(grid[i][j] !== 0 && grid[i][j] === grid[i][j+1]){
+      if(grid[i][j] !== 0 && grid[i][j] === grid[i][j+1] && !marked.includes(`${i},${j+1}`) && !marked.includes(`${i},${j}`)){
+
         grid[i][j+1] = grid[i][j] * 2;
+        marked.push(`${i},${j+1}`);
+        console.log(marked);
+
+        //update score
+        score+=grid[i][j+1];
+        scoreDiv.innerText = score;
+
         let color = document.querySelector(`.top${i}.left${j+1}`);
         color.innerText = grid[i][j+1];
         color.classList.add(`c${grid[i][j+1]}`);
@@ -153,10 +203,13 @@ function moveRight(){
   }
 
   moveC ===1? createTile() :"";
+  marked=[];
 }
 
 //swipe up
 function moveUp(){
+
+  if (animating === true) return;
 
   let moveC;
 
@@ -176,9 +229,16 @@ function moveUp(){
           tile.classList.remove(`top${i}`);
           grid[i][j]=0;
 
-          if(grid[i-g-1] && grid[i-g][j] === grid[i-g-1][j]){
+          if(grid[i-g-1] && grid[i-g][j] === grid[i-g-1][j] && !marked.includes(`${i-g-1},${j}`) && !marked.includes(`${i-g},${j}`)){
 
             grid[i-g-1][j] = grid[i-g][j] * 2;
+            marked.push(`${i-g-1},${j}`);
+            console.log(marked);
+
+            //update score
+            score+=grid[i-g-1][j];
+            scoreDiv.innerText = score;
+
             let color = document.querySelector(`.top${i-g-1}.left${j}`);
             color.innerText = grid[i-g-1][j];
             color.classList.add(`c${grid[i-g-1][j]}`);
@@ -194,8 +254,15 @@ function moveUp(){
 
       }
 
-      if(grid[i][j] !== 0 && grid[i-1] && grid[i][j]=== grid[i-1][j]){
+      if(grid[i][j] !== 0 && grid[i-1] && grid[i][j]=== grid[i-1][j] && !marked.includes(`${i-1},${j}`) && !marked.includes(`${i},${j}`)){
         grid[i-1][j] = grid[i][j] * 2;
+        marked.push(`${i-1},${j}`);
+        console.log(marked);
+
+        //update score
+        score+=grid[i-1][j];
+        scoreDiv.innerText = score;
+
         let color = document.querySelector(`.top${i-1}.left${j}`);
         color.innerText = grid[i-1][j];
         color.classList.add(`c${grid[i-1][j]}`);
@@ -209,11 +276,14 @@ function moveUp(){
   }
 
   moveC ===1? createTile() :"";
+  marked=[];
 }
 
 //swipe down
 
 function moveDown(){
+
+  if (animating === true) return;
 
   console.log("hji");
 
@@ -235,9 +305,17 @@ function moveDown(){
           tile.classList.remove(`top${i}`);
           grid[i][j]=0;
 
-          if(grid[i+g+1] && grid[i+g][j] === grid[i+g+1][j]){
+          if(grid[i+g+1] && grid[i+g][j] === grid[i+g+1][j] && !marked.includes(`${i+g+1},${j}`) && !marked.includes(`${i+g},${j}`)){
 
             grid[i+g+1][j] = grid[i+g][j] * 2;
+            marked.push(`${i+g+1},${j}`);
+            console.log(marked);
+
+            //update score
+            score+=grid[i+g+1][j];
+            scoreDiv.innerText = score;
+
+
             let color = document.querySelector(`.top${i+g+1}.left${j}`);
             color.innerText = grid[i+g+1][j];
             color.classList.add(`c${grid[i+g+1][j]}`);
@@ -252,8 +330,16 @@ function moveDown(){
 
       }
 
-      if(grid[i][j] !== 0 && grid[i+1] && grid[i][j]=== grid[i+1][j]){
+      if(grid[i][j] !== 0 && grid[i+1] && grid[i][j]=== grid[i+1][j] && !marked.includes(`${i+1},${j}`) && !marked.includes(`${i},${j}`)){
         grid[i+1][j] = grid[i][j] * 2;
+        marked.push(`${i+1},${j}`);
+        console.log(marked);
+
+        //update score
+        score+=grid[i+1][j];
+        scoreDiv.innerText = score;
+
+
         let color = document.querySelector(`.top${i+1}.left${j}`);
         color.innerText = grid[i+1][j];
         color.classList.add(`c${grid[i+1][j]}`);
@@ -267,6 +353,7 @@ function moveDown(){
   }
 
   moveC ===1? createTile() :"";
+  marked=[];
 }
 
 
@@ -317,6 +404,7 @@ function posSwitch(gridTop, gridRight){
 //createTile
 
 function createTile(){
+  setTimeout(()=>{
   let vacants = [];
 
   //search for 0s
@@ -343,6 +431,18 @@ function createTile(){
   //create element
   const div = document.createElement("div");
   div.innerText= grid[vacants[random][0]][vacants[random][1]] ;
-  div.classList.add(`top${vacants[random][0]}`,  `left${vacants[random][1]}`);
+  div.classList.add(`top${vacants[random][0]}`,  `left${vacants[random][1]}` , `tile`);
+  div.addEventListener('transitionend',()=>{
+    console.log("end");
+    animating=false;
+  });
+  div.addEventListener('transitionstart',()=>{
+    console.log("start");
+    animating=true;
+  });
   tileContainer.appendChild(div);
-}
+  cells++;  
+  console.log("number: ",cells)
+
+},250)
+};
