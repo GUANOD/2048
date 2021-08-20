@@ -47,7 +47,7 @@ body{
   display: grid;
   place-items: center;
   font-size: 50px;
-  transition-duration: 0.25s;
+  transition-duration: 0.10s;
   border: solid rgb(33, 101, 117) 5px;
   border-radius: 10px;
 }

@@ -482,5 +482,5 @@ function createTile(){
     restartModal.style.visibility= "visible";
   }
 
-},250)
+},100)
 };
