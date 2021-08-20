@@ -1,9 +1,15 @@
 const tileContainer = document.querySelector(".tileContainer");
 const gridContainer = document.querySelector(".gridContainer");
 const scoreDiv = document.querySelector(".score");
+const startModal = document.querySelector(".startGame");
+const startButton = document.querySelector(".start");
+const restartModal = document.querySelector(".restartGame");
+const restartButton = document.querySelector(".restart");
+const restartButton1 = document.querySelector(".restart1");
+
 
 //define grid
-const grid = [
+let grid = [
   [0,0,0,0],
   [0,0,0,0],
   [0,0,0,0],
@@ -21,26 +27,51 @@ scoreDiv.innerText = score;
 
 let cells = 0;
 
-//spawn 2 tiles
-createTile();
-createTile();
+//start game
 
-const button = document.querySelector('button');
+let start = false;
+
+startButton.addEventListener('click', startGame);
+restartButton.addEventListener('click', startGame);
+restartButton1.addEventListener('click', startGame);
+
+function startGame(){
+  clearBoard();
+
+  startModal.style.visibility="hidden";
+  restartModal.style.visibility="hidden";
+  start = true;
+  
+  //spawn 2 tiles
+  createTile();
+  createTile();
+}
+
+function clearBoard(){
+
+  document.querySelectorAll(".tile").forEach(tile=>{
+    tile.remove();
+  });
+
+  grid = [
+    [0,0,0,0],
+    [0,0,0,0],
+    [0,0,0,0],
+    [0,0,0,0]
+  ];
+}
+
+
 
 //animation event 
 
 let animating = false;
 
-// cells.addEventListener('animationstart',()=>{
-//   animating = true;
-// });
-
-// cells.addEventListener('animationend',()=>{
-//   animating = false;
-// })
-
+//controls
 
 document.addEventListener('keyup',(e)=>{
+  if(start===false) return;
+
   switch(e.key){
     case 'ArrowRight':
       moveRight();
@@ -56,8 +87,6 @@ document.addEventListener('keyup',(e)=>{
       break;
   }
 });
-
-//controls
 
 //swipe left
 
@@ -356,11 +385,6 @@ function moveDown(){
   marked=[];
 }
 
-
-button.addEventListener('click', ()=>{
-  createTile();
-})
-
 //position switch
 
 function posSwitch(gridTop, gridRight){
@@ -419,30 +443,44 @@ function createTile(){
 
   //random vacant place
   let random = Math.floor(Math.random() * vacants.length);
+  let number = Math.random();
+
+
 
   // change vacant value
-  grid[vacants[random][0]][vacants[random][1]] =2;
-  console.table(grid);
+  console.log(number);
+  number <= 0.75 ? grid[vacants[random][0]][vacants[random][1]] = 2: grid[vacants[random][0]][vacants[random][1]] = 4;
 
   // define top an left location
-  
   let pos = posSwitch(vacants[random][0], vacants[random][1]);
 
   //create element
   const div = document.createElement("div");
   div.innerText= grid[vacants[random][0]][vacants[random][1]] ;
-  div.classList.add(`top${vacants[random][0]}`,  `left${vacants[random][1]}` , `tile`);
+  div.classList.add(`top${vacants[random][0]}`,  `left${vacants[random][1]}` , `tile`, `c${grid[vacants[random][0]][vacants[random][1]]}`);
+
   div.addEventListener('transitionend',()=>{
-    console.log("end");
     animating=false;
   });
+
   div.addEventListener('transitionstart',()=>{
-    console.log("start");
     animating=true;
   });
+
   tileContainer.appendChild(div);
   cells++;  
-  console.log("number: ",cells)
+
+  if( vacants.length-1 ===  0){
+    for(let i = 0; i < 4; i++){
+      for(let j =0; j < 4; j++){
+          if (i < 3 && grid[i][j] === grid[i+1][j] || i >0 && grid[i][j] === grid[i-1][j] || j < 3 && grid[i][j] === grid[i][j+1] || j>0 && grid[i][j] === grid[i][j-1]){
+            return;
+          }
+      }
+    }
+    start=false;
+    restartModal.style.visibility= "visible";
+  }
 
 },250)
 };
