@@ -7,7 +7,6 @@ const restartModal = document.querySelector(".restartGame");
 const restartButton = document.querySelector(".restart");
 const restartButton1 = document.querySelector(".restart1");
 
-
 //define grid
 let grid = [
   [0,0,0,0],
@@ -61,8 +60,6 @@ function clearBoard(){
   ];
 }
 
-
-
 //animation event 
 
 let animating = false;
@@ -70,7 +67,7 @@ let animating = false;
 //controls
 
 document.addEventListener('keyup',(e)=>{
-  if(start===false) return;
+  if(!start) return;
 
   switch(e.key){
     case 'ArrowRight':
@@ -92,7 +89,7 @@ document.addEventListener('keyup',(e)=>{
 
 function moveLeft(){
 
-  if (animating === true) return;
+  if (animating) return;
 
   let moveC;
 
@@ -116,7 +113,6 @@ function moveLeft(){
 
             grid[i][j-g-1] = grid[i][j-g] * 2;  
             marked.push(`${i},${j-g-1}`); // mark the remaining cell
-            console.log(marked);
 
             //update score
             score+=grid[i][j-g-1];
@@ -139,7 +135,6 @@ function moveLeft(){
 
         grid[i][j-1] = grid[i][j] * 2;
         marked.push(`${i},${j-1}`);
-        console.log(marked);
 
         //update score
         score+=grid[i][j-1];
@@ -147,9 +142,9 @@ function moveLeft(){
 
 
         let color = document.querySelector(`.top${i}.left${j-1}`);
-            color.innerText = grid[i][j-1];
-            color.classList.add(`c${grid[i][j-1]}`);
-            color.classList.remove(`c${grid[i][j]}`);
+        color.innerText = grid[i][j-1];
+        color.classList.add(`c${grid[i][j-1]}`);
+        color.classList.remove(`c${grid[i][j]}`);
         grid[i][j] = 0;
         document.querySelector(`.top${i}.left${j}`).remove();
 
@@ -166,7 +161,7 @@ function moveLeft(){
 
 function moveRight(){
 
-  if (animating === true) return;
+  if (animating) return;
 
   let moveC;
 
@@ -191,7 +186,6 @@ function moveRight(){
 
             grid[i][j+g+1] = grid[i][j+g] * 2;
             marked.push(`${i},${j+g+1}`);
-            console.log(marked);
 
             //update score
             score+=grid[i][j+g+1];
@@ -213,7 +207,6 @@ function moveRight(){
 
         grid[i][j+1] = grid[i][j] * 2;
         marked.push(`${i},${j+1}`);
-        console.log(marked);
 
         //update score
         score+=grid[i][j+1];
@@ -238,7 +231,7 @@ function moveRight(){
 //swipe up
 function moveUp(){
 
-  if (animating === true) return;
+  if (animating) return;
 
   let moveC;
 
@@ -262,7 +255,6 @@ function moveUp(){
 
             grid[i-g-1][j] = grid[i-g][j] * 2;
             marked.push(`${i-g-1},${j}`);
-            console.log(marked);
 
             //update score
             score+=grid[i-g-1][j];
@@ -286,7 +278,6 @@ function moveUp(){
       if(grid[i][j] !== 0 && grid[i-1] && grid[i][j]=== grid[i-1][j] && !marked.includes(`${i-1},${j}`) && !marked.includes(`${i},${j}`)){
         grid[i-1][j] = grid[i][j] * 2;
         marked.push(`${i-1},${j}`);
-        console.log(marked);
 
         //update score
         score+=grid[i-1][j];
@@ -312,9 +303,7 @@ function moveUp(){
 
 function moveDown(){
 
-  if (animating === true) return;
-
-  console.log("hji");
+  if (animating) return;
 
   let moveC;
 
@@ -354,9 +343,7 @@ function moveDown(){
           }
 
           moveC=1;
-
         }
-
       }
 
       if(grid[i][j] !== 0 && grid[i+1] && grid[i][j]=== grid[i+1][j] && !marked.includes(`${i+1},${j}`) && !marked.includes(`${i},${j}`)){
@@ -385,46 +372,6 @@ function moveDown(){
   marked=[];
 }
 
-//position switch
-
-function posSwitch(gridTop, gridRight){
-
-  let top;
-  let left;
-
-    switch(gridTop){
-      case 0 : 
-        top = "0";
-        break;
-      case 1 : 
-        top = "25%";
-        break;
-      case 2 : 
-        top = "50%";
-        break;
-      case 3 : 
-        top = "75%";
-        break;
-    }
-
-    switch(gridRight){
-      case 0 : 
-        left = "0";
-        break;
-      case 1 : 
-        left = "25%";
-        break;
-      case 2 : 
-        left = "50%";
-        break;
-      case 3 : 
-        left = "75%";
-        break;
-    }
-
-    return {top,left};
-}
-
 //createTile
 
 function createTile(){
@@ -448,11 +395,7 @@ function createTile(){
 
 
   // change vacant value
-  console.log(number);
   number <= 0.75 ? grid[vacants[random][0]][vacants[random][1]] = 2: grid[vacants[random][0]][vacants[random][1]] = 4;
-
-  // define top an left location
-  let pos = posSwitch(vacants[random][0], vacants[random][1]);
 
   //create element
   const div = document.createElement("div");
@@ -467,8 +410,7 @@ function createTile(){
     animating=true;
   });
 
-  tileContainer.appendChild(div);
-  cells++;  
+  tileContainer.appendChild(div); 
 
   if( vacants.length-1 ===  0){
     for(let i = 0; i < 4; i++){
