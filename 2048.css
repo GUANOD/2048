@@ -4,6 +4,7 @@
 html,body{
   margin:0;
   padding:0;
+  overscroll-behavior-y: contain;
 }
 
 body{
@@ -152,3 +153,4 @@ background-color: aqua;
     font-size: 28px;
   }
 }
+
