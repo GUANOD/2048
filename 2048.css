@@ -22,12 +22,13 @@ body{
   background-color:rgb(215, 242, 248)
 }
 
+
+
 .cell{
   border: solid rgb(33, 101, 117) 5px;
 }
 
 .tileContainer{
-  content: "";
   width: 600px;
   height:600px;
   background-color: transparent;
@@ -138,3 +139,16 @@ background-color: aqua;
   place-items: center;
 }
 
+@media screen and (max-width: 620px) {
+  .gridContainer, .tileContainer {
+    width: calc(100vw - 20px);
+    height: calc(100vw - 20px);
+  }
+
+}
+
+@media screen and (max-width: 450px) {
+  .tile {
+    font-size: 28px;
+  }
+}
